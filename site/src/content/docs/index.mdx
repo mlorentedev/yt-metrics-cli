@@ -1,0 +1,63 @@
+---
+title: YouTube Toolkit
+description: A Python CLI for multi-channel YouTube analytics and transcript extraction.
+template: splash
+hero:
+  tagline: Analyze multiple YouTube channels at once. Compute engagement metrics, export structured reports, and download transcripts — all from the command line.
+  actions:
+    - text: Get Started
+      link: /youtube-toolkit/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/mlorentedev/youtube-toolkit
+      icon: external
+      variant: minimal
+---
+
+import { CardGrid, Card } from '@astrojs/starlight/components';
+
+## Why YouTube Toolkit?
+
+Comparing YouTube channels manually means clicking through Studio dashboards one at a time, copy-pasting numbers into spreadsheets, and losing hours before you can even start analyzing. YouTube Toolkit replaces that workflow with a single command that fetches video data from the YouTube Data API v3, computes engagement metrics, and writes structured reports you can open in any tool.
+
+## Features
+
+<CardGrid stagger>
+  <Card title="Multi-Channel Analysis" icon="list-format">
+    Define channels in a YAML file using `@handle`, legacy username, or raw channel ID.
+    One command fetches up to 100 videos per channel with full statistics.
+  </Card>
+  <Card title="Engagement Metrics" icon="bars">
+    Six computed metrics per video: engagement rate, view rate, like rate, comment rate,
+    subscriber-relative engagement, and views per minute. Formulas are transparent and
+    documented.
+  </Card>
+  <Card title="Structured Reports" icon="document">
+    Every run produces a timestamped folder with CSV data, per-channel stats (top 5 videos,
+    performance distribution), cross-channel trend analysis, and URL lists for the best and
+    latest videos.
+  </Card>
+  <Card title="Transcript Downloader" icon="translate">
+    Fetch video transcripts with multi-language support and automatic fallback. Preferred
+    languages are configurable; when unavailable, the first available transcript is used.
+    Local fixture files provide an offline fallback.
+  </Card>
+</CardGrid>
+
+## Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/mlorentedev/youtube-toolkit.git
+cd youtube-toolkit
+task install
+
+# Configure
+cp .env.example .env        # Set YOUTUBE_API_KEY
+vi channels.yml             # Add channels to analyze
+
+# Run
+task run:channels            # Analyze channels and generate reports
+task run:video               # Download a video transcript
+```
