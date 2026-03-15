@@ -1,4 +1,4 @@
-# youtube-toolkit
+# yt-metrics-cli
 
 > CLI for YouTube channel analysis and transcript downloading.
 

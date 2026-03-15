@@ -3,10 +3,10 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   site: 'https://mlorentedev.github.io',
-  base: '/youtube-toolkit',
+  base: '/yt-metrics-cli',
   integrations: [
     starlight({
-      title: 'YouTube Toolkit',
+      title: 'YT Metrics CLI',
       description:
         'A Python CLI for multi-channel YouTube analytics, engagement metrics, and transcript extraction.',
       favicon: '/favicon.svg',
@@ -18,7 +18,7 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/mlorentedev/youtube-toolkit',
+          href: 'https://github.com/mlorentedev/yt-metrics-cli',
         },
       ],
       head: [
@@ -26,7 +26,7 @@ export default defineConfig({
           tag: 'meta',
           attrs: {
             property: 'og:image',
-            content: 'https://mlorentedev.github.io/youtube-toolkit/favicon.svg',
+            content: 'https://mlorentedev.github.io/yt-metrics-cli/favicon.svg',
           },
         },
         {

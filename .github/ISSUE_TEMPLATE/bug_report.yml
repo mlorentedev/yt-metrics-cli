@@ -16,7 +16,7 @@ body:
       description: Minimal steps to reproduce the issue
       placeholder: |
         1. Set up .env with YOUTUBE_API_KEY
-        2. Run `youtube-toolkit channels`
+        2. Run `yt-metrics channels`
         3. See error
     validations:
       required: true
@@ -24,9 +24,9 @@ body:
     id: environment
     attributes:
       label: Environment
-      description: Python version, OS, youtube-toolkit version
+      description: Python version, OS, yt-metrics-cli version
       placeholder: |
-        - youtube-toolkit version: 0.1.0
+        - yt-metrics-cli version: 0.1.0
         - Python: 3.12.8
         - OS: macOS 15.2 / Ubuntu 24.04
     validations:

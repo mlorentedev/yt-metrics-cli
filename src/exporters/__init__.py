@@ -1,4 +1,4 @@
-"""Report generators for youtube-toolkit."""
+"""Report generators for yt-metrics-cli."""
 
 from src.exporters.csv_exporter import export_to_csv
 from src.exporters.readme_exporter import export_output_readme

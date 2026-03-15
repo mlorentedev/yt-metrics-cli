@@ -1,4 +1,4 @@
-"""YouTube Toolkit CLI — Channel analyzer and transcript downloader."""
+"""yt-metrics CLI — Channel analyzer and transcript downloader."""
 
 import logging
 from datetime import datetime
@@ -20,7 +20,7 @@ from .exporters import (
 )
 
 app = typer.Typer(
-    name="youtube-toolkit",
+    name="yt-metrics",
     help="CLI for YouTube channel analysis and transcript downloading.",
     no_args_is_help=True,
 )

@@ -1,4 +1,4 @@
-"""Shared test fixtures for youtube-toolkit."""
+"""Shared test fixtures for yt-metrics-cli."""
 
 from pathlib import Path
 from typing import Any

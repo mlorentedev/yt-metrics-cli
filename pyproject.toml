@@ -1,5 +1,5 @@
 [project]
-name = "youtube-toolkit"
+name = "yt-metrics-cli"
 version = "0.1.0"
 description = "CLI for YouTube channel analysis and transcript downloading"
 readme = "README.md"
@@ -35,13 +35,13 @@ dev = [
 ]
 
 [project.scripts]
-youtube-toolkit = "src.main:app"
+yt-metrics = "src.main:app"
 
 [project.urls]
-Homepage = "https://github.com/mlorentedev/youtube-toolkit"
-Documentation = "https://mlorentedev.github.io/youtube-toolkit/"
-Repository = "https://github.com/mlorentedev/youtube-toolkit"
-Issues = "https://github.com/mlorentedev/youtube-toolkit/issues"
+Homepage = "https://github.com/mlorentedev/yt-metrics-cli"
+Documentation = "https://mlorentedev.github.io/yt-metrics-cli/"
+Repository = "https://github.com/mlorentedev/yt-metrics-cli"
+Issues = "https://github.com/mlorentedev/yt-metrics-cli/issues"
 
 [build-system]
 requires = ["hatchling"]
