@@ -5,11 +5,11 @@
 ## Architecture
 
 - **CLI Layer:** `src/main.py` — Entry point with `channels` and `transcript` commands
-- **Config:** `src/config.py` — Constants and environment variable management
-- **Core:** `src/analyzer.py` — YouTube API wrapper (channel resolution, batch video stats)
+- **Config:** `src/config.py` — pydantic-settings based configuration
+- **Core:** `src/analyzer.py` — YouTube API wrapper (channel resolution, batch video stats, exponential backoff)
 - **Metrics:** `src/metrics.py` — Pure engagement calculations (6 computed fields)
-- **Transcript:** `src/transcript.py` — Transcript download with 3-level fallback
-- **Export:** `src/exporters.py` — Report generators (CSV, TXT, README)
+- **Transcript:** `src/transcript.py` — Transcript download with 3-level fallback and video ID validation
+- **Export:** `src/exporters/` — Report generators package (CSV, TXT, README, URL)
 
 ## Technical Standards
 
@@ -20,19 +20,21 @@
 | Dependencies | uv |
 | Formatting | Ruff |
 | Testing | pytest + pytest-cov |
+| CLI | Typer + Rich |
+| Config | pydantic-settings |
 | Build | hatchling |
 
 ## Key Paths
 
 | Path | Role |
 |---|---|
-| `src/main.py` | CLI entry point |
-| `src/config.py` | Configuration and constants |
-| `src/analyzer.py` | YouTube API wrapper |
+| `src/main.py` | CLI entry point (Typer app) |
+| `src/config.py` | Configuration via pydantic-settings |
+| `src/analyzer.py` | YouTube API wrapper with retry logic |
 | `src/metrics.py` | Engagement metric calculations |
 | `src/transcript.py` | Transcript downloader with fallback chain |
-| `src/exporters.py` | Report generators (CSV, text, README) |
-| `tests/` | pytest suite |
+| `src/exporters/` | Report generators (csv, text, readme, url) |
+| `tests/` | pytest suite (77 tests, 83% coverage) |
 | `site/` | Astro Starlight documentation |
 
 ## Verification Commands
