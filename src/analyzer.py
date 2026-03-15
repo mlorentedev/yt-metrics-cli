@@ -136,7 +136,9 @@ class YouTubeChannelAnalyzer:
             elif custom_url:
                 channel_id = self.get_channel_id_from_custom_url(custom_url)
 
-        assert channel_id is not None  # guaranteed by logic above
+        if channel_id is None:
+            msg = "Could not resolve channel ID from provided identifiers"
+            raise ValueError(msg)
         channel_info = self.get_channel_info(channel_id)
         uploads_playlist_id = self._get_uploads_playlist(channel_id)
         videos = self._fetch_playlist_videos(uploads_playlist_id, max_results)
