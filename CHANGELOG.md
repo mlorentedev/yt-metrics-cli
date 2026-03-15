@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.1.0...v0.2.0) (2026-03-15)
+
+
+### Features
+
+* add API rate limiting and README overhaul ([#8](https://github.com/mlorentedev/yt-metrics-cli/issues/8)) ([d7e474d](https://github.com/mlorentedev/yt-metrics-cli/commit/d7e474d2fce5627b6bca13543193fd85dcb6da6d))
+
 ## 0.1.0 (2026-03-15)
 
 
