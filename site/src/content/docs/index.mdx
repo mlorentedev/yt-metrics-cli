@@ -59,17 +59,17 @@ YT Metrics CLI wraps the YouTube Data API v3 in a single CLI. Point it at a YAML
 # Clone and install
 git clone https://github.com/mlorentedev/yt-metrics-cli.git
 cd yt-metrics-cli
-task install
+make install
 
 # Configure
 cp .env.example .env        # Set YOUTUBE_API_KEY
-vi channels.yml             # Add channels to analyze
+cp channels.example.yml channels.yml  # Add channels to analyze
 
 # Analyze channels — reports land in output/<timestamp>/
-task run:channels
+yt-metrics channels
 
 # Download a single video transcript
-task run:video
+yt-metrics transcript -v dQw4w9WgXcQ
 ```
 
 ## Built with
@@ -84,7 +84,7 @@ task run:video
   <Card title="youtube-transcript-api" icon="translate">
     Multi-language transcript fetch with automatic fallback chain.
   </Card>
-  <Card title="Task + Poetry" icon="setting">
-    Reproducible builds with Poetry lockfile. Task runner for one-command install, run, and update workflows.
+  <Card title="uv + Makefile" icon="setting">
+    Fast package management with uv. Makefile for one-command install, check, test, and build workflows.
   </Card>
 </CardGrid>

@@ -8,8 +8,7 @@ description: Install yt-metrics-cli, configure your API key, define channels, an
 | Requirement | Version | Purpose |
 |---|---|---|
 | Python | 3.12+ | Runtime |
-| Poetry | latest | Dependency management |
-| Task (go-task) | v3 | Task runner (`Taskfile.yml`) |
+| uv | latest | Dependency management |
 | YouTube Data API v3 key | — | Channel and video data |
 
 Get an API key from the [Google Cloud Console](https://console.cloud.google.com/apis/credentials). Enable the **YouTube Data API v3** for the project associated with that key.
@@ -19,10 +18,10 @@ Get an API key from the [Google Cloud Console](https://console.cloud.google.com/
 ```bash
 git clone https://github.com/mlorentedev/yt-metrics-cli.git
 cd yt-metrics-cli
-task install
+make install
 ```
 
-`task install` runs `poetry install --sync --no-root` inside an in-project virtualenv.
+`make install` creates a venv and runs `uv pip install -e ".[dev]"` with all dependencies.
 
 ## Configure
 
@@ -63,10 +62,10 @@ Create a `channels.yml` file in the project root. Each entry needs exactly one i
 ### Analyze channels
 
 ```bash
-task run:channels
+yt-metrics channels
 ```
 
-This fetches videos from every channel in `channels.yml` (up to `MAX_RESULTS_PER_CHANNEL` per channel), computes engagement metrics, and writes a timestamped report folder under `output/`. Each batch request retrieves statistics for 50 videos at a time to stay within API limits.
+This fetches videos from every channel in `channels.yml` (up to `MAX_RESULTS_PER_CHANNEL` per channel), computes engagement metrics, and writes a timestamped report folder under `output/`. Each batch request retrieves statistics for 50 videos at a time to stay within API limits. API calls automatically retry with exponential backoff on rate limit errors (HTTP 403/429).
 
 **Generated files per run:**
 
@@ -82,10 +81,8 @@ This fetches videos from every channel in `channels.yml` (up to `MAX_RESULTS_PER
 ### Download a transcript
 
 ```bash
-task run:video
-
-# Or specify a video ID and languages directly
-poetry run python -m src.main video dQw4w9WgXcQ --langs en,es
+yt-metrics transcript -v dQw4w9WgXcQ
+yt-metrics transcript -v dQw4w9WgXcQ -l en,es
 ```
 
 The downloader tries your preferred languages first, falls back to the first available transcript, and finally checks a local fixtures directory (`YOUTUBE_TRANSCRIPT_FIXTURES_DIR`) for offline use.
