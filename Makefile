@@ -25,7 +25,7 @@ clean: ## Remove build artifacts
 	rm -rf dist/ .venv/ *.egg-info/ .ruff_cache/ .mypy_cache/ .pytest_cache/ htmlcov/ .coverage coverage.xml site/dist/ site/node_modules/
 
 run: ## Run channel analysis (requires .env)
-	uv run youtube-toolkit channels
+	uv run yt-metrics channels
 
 site: ## Build documentation site (requires Node.js)
 	cd site && npm ci && npm run build

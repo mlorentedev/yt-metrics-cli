@@ -1,4 +1,4 @@
-# youtube-toolkit — Backlog
+# yt-metrics-cli — Backlog
 
 > CLI for YouTube channel analysis and transcript downloading.
 

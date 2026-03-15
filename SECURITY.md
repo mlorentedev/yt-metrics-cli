@@ -12,7 +12,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **Do not** open a public issue
-2. Email the maintainer or use [GitHub Security Advisories](https://github.com/mlorentedev/youtube-toolkit/security/advisories/new)
+2. Email the maintainer or use [GitHub Security Advisories](https://github.com/mlorentedev/yt-metrics-cli/security/advisories/new)
 3. Include a description of the vulnerability, steps to reproduce, and potential impact
 
 ## Response Timeline
@@ -23,7 +23,7 @@ If you discover a security vulnerability, please report it responsibly:
 
 ## Scope
 
-This policy covers the `youtube-toolkit` Python package. It does not cover:
+This policy covers the `yt-metrics-cli` Python package. It does not cover:
 
 - YouTube API credentials (user responsibility)
 - Third-party dependencies (report upstream)

@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: Install youtube-toolkit, configure your API key, define channels, and run your first analysis.
+description: Install yt-metrics-cli, configure your API key, define channels, and run your first analysis.
 ---
 
 ## Prerequisites
@@ -17,8 +17,8 @@ Get an API key from the [Google Cloud Console](https://console.cloud.google.com/
 ## Install
 
 ```bash
-git clone https://github.com/mlorentedev/youtube-toolkit.git
-cd youtube-toolkit
+git clone https://github.com/mlorentedev/yt-metrics-cli.git
+cd yt-metrics-cli
 task install
 ```
 

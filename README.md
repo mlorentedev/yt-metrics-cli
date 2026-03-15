@@ -1,9 +1,9 @@
-# youtube-toolkit
+# yt-metrics-cli
 
-[![CI](https://github.com/mlorentedev/youtube-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/mlorentedev/youtube-toolkit/actions/workflows/ci.yml)
+[![CI](https://github.com/mlorentedev/yt-metrics-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mlorentedev/yt-metrics-cli/actions/workflows/ci.yml)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Starlight-purple)](https://mlorentedev.github.io/youtube-toolkit/)
+[![Docs](https://img.shields.io/badge/docs-Starlight-purple)](https://mlorentedev.github.io/yt-metrics-cli/)
 
 CLI tool that analyzes YouTube channels and downloads video transcripts, generating engagement metrics and structured reports.
 
@@ -11,15 +11,15 @@ CLI tool that analyzes YouTube channels and downloads video transcripts, generat
 
 YouTube Studio gives you analytics for **your own** channels. If you want to compare multiple channels, benchmark engagement rates, or bulk-download transcripts for research, you're stuck with manual work or fragmented browser extensions.
 
-**youtube-toolkit** solves this: point it at a list of channels, get CSV data, engagement reports, and transcript files in one command.
+**yt-metrics-cli** solves this: point it at a list of channels, get CSV data, engagement reports, and transcript files in one command.
 
 ## Quick Start
 
 ```bash
 # Install
-pip install youtube-toolkit
+pip install yt-metrics-cli
 # or
-uv tool install youtube-toolkit
+uv tool install yt-metrics-cli
 
 # Set your API key
 export YOUTUBE_API_KEY=your_key_here
@@ -32,7 +32,7 @@ cat > channels.yml << 'EOF'
 EOF
 
 # Analyze
-youtube-toolkit channels
+yt-metrics channels
 ```
 
 ## Features
@@ -51,9 +51,9 @@ youtube-toolkit channels
 ### Analyze Channels
 
 ```bash
-youtube-toolkit channels                        # Use defaults from .env
-youtube-toolkit channels -c my_channels.yml     # Custom channel list
-youtube-toolkit channels -n 100 -o ./reports    # 100 videos, custom output
+yt-metrics channels                        # Use defaults from .env
+yt-metrics channels -c my_channels.yml     # Custom channel list
+yt-metrics channels -n 100 -o ./reports    # 100 videos, custom output
 ```
 
 Generates timestamped reports in `output/<timestamp>/`:
@@ -67,8 +67,8 @@ Generates timestamped reports in `output/<timestamp>/`:
 ### Download Transcripts
 
 ```bash
-youtube-toolkit transcript -v dQw4w9WgXcQ       # Specific video
-youtube-toolkit transcript -v abc123 -l es,en    # Language preference
+yt-metrics transcript -v dQw4w9WgXcQ       # Specific video
+yt-metrics transcript -v abc123 -l es,en    # Language preference
 ```
 
 ## Engagement Metrics
@@ -96,8 +96,8 @@ All settings can be set via environment variables or `.env` file:
 ## Development
 
 ```bash
-git clone https://github.com/mlorentedev/youtube-toolkit.git
-cd youtube-toolkit
+git clone https://github.com/mlorentedev/yt-metrics-cli.git
+cd yt-metrics-cli
 make install    # Create venv + install deps
 make check      # Lint + typecheck + test
 make build      # Full build

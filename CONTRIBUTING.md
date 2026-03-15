@@ -3,8 +3,8 @@
 ## Setup
 
 ```bash
-git clone https://github.com/mlorentedev/youtube-toolkit.git
-cd youtube-toolkit
+git clone https://github.com/mlorentedev/yt-metrics-cli.git
+cd yt-metrics-cli
 make install
 ```
 
