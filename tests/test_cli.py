@@ -1,5 +1,6 @@
 """Tests for Typer CLI interface."""
 
+import re
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -9,6 +10,11 @@ from src.config import reset_settings
 from src.main import app
 
 runner = CliRunner()
+
+
+def _strip_ansi(text: str) -> str:
+    """Remove ANSI escape codes from text."""
+    return re.sub(r"\x1b\[[0-9;]*m", "", text)
 
 
 class TestHelpOutput:
@@ -24,16 +30,18 @@ class TestHelpOutput:
     def test_channels_help(self) -> None:
         result = runner.invoke(app, ["channels", "--help"])
         assert result.exit_code == 0
-        assert "--channels" in result.output
-        assert "--max-results" in result.output
-        assert "--output" in result.output
+        output = _strip_ansi(result.output)
+        assert "--channels" in output
+        assert "--max-results" in output
+        assert "--output" in output
 
     def test_transcript_help(self) -> None:
         result = runner.invoke(app, ["transcript", "--help"])
         assert result.exit_code == 0
-        assert "--video" in result.output
-        assert "--langs" in result.output
-        assert "--output" in result.output
+        output = _strip_ansi(result.output)
+        assert "--video" in output
+        assert "--langs" in output
+        assert "--output" in output
 
 
 class TestChannelsCommand:
