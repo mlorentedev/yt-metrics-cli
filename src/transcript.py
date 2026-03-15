@@ -1,6 +1,7 @@
 """YouTube transcript downloading."""
 
 import logging
+import re
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,8 @@ from .config import get_settings
 
 logger = logging.getLogger(__name__)
 
+_VIDEO_ID_PATTERN = re.compile(r"^[a-zA-Z0-9_-]{1,20}$")
+
 
 class YouTubeTranscriptDownloader:
     def __init__(self, languages: list[str] | None = None) -> None:
@@ -23,6 +26,7 @@ class YouTubeTranscriptDownloader:
 
     def get_transcript(self, video_id: str) -> str:
         """Download transcript with multi-language fallback chain."""
+        self._validate_video_id(video_id)
         try:
             transcript = self.client.fetch(video_id, languages=self.languages)
             return self._format_transcript(transcript)
@@ -45,6 +49,13 @@ class YouTubeTranscriptDownloader:
                 return fallback
             msg = f"Unexpected error fetching transcript: {e}"
             raise RuntimeError(msg) from e
+
+    @staticmethod
+    def _validate_video_id(video_id: str) -> None:
+        """Validate video ID format to prevent path traversal."""
+        if not _VIDEO_ID_PATTERN.match(video_id):
+            msg = f"Invalid video ID format: {video_id!r}"
+            raise ValueError(msg)
 
     def save_transcript(self, video_id: str, output_dir: str = ".") -> Path:
         """Download and save transcript to file."""

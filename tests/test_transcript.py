@@ -8,6 +8,47 @@ import pytest
 from src.config import reset_settings
 
 
+class TestVideoIdValidation:
+    """Tests for video ID format validation."""
+
+    def test_rejects_path_traversal(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("YOUTUBE_API_KEY", raising=False)
+        reset_settings()
+
+        with patch("src.transcript.YouTubeTranscriptApi"):
+            from src.transcript import YouTubeTranscriptDownloader
+
+            downloader = YouTubeTranscriptDownloader(["en"])
+            with pytest.raises(ValueError, match="Invalid video ID"):
+                downloader.get_transcript("../../etc/passwd")
+
+    def test_rejects_empty_id(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("YOUTUBE_API_KEY", raising=False)
+        reset_settings()
+
+        with patch("src.transcript.YouTubeTranscriptApi"):
+            from src.transcript import YouTubeTranscriptDownloader
+
+            downloader = YouTubeTranscriptDownloader(["en"])
+            with pytest.raises(ValueError, match="Invalid video ID"):
+                downloader.get_transcript("")
+
+    def test_accepts_valid_id(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.delenv("YOUTUBE_API_KEY", raising=False)
+        reset_settings()
+
+        with patch("src.transcript.YouTubeTranscriptApi") as mock_api_cls:
+            mock_client = MagicMock()
+            mock_api_cls.return_value = mock_client
+            mock_client.fetch.return_value = [{"text": "ok"}]
+
+            from src.transcript import YouTubeTranscriptDownloader
+
+            downloader = YouTubeTranscriptDownloader(["en"])
+            result = downloader.get_transcript("dQw4w9WgXcQ")
+            assert result == "ok"
+
+
 class TestGetTranscript:
     """Tests for transcript download with fallback chain."""
 
