@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.0...v0.2.1) (2026-03-15)
+
+
+### Documentation
+
+* update stale references to current tooling ([#12](https://github.com/mlorentedev/yt-metrics-cli/issues/12)) ([d5f9c08](https://github.com/mlorentedev/yt-metrics-cli/commit/d5f9c08d89a6d8730a064d9b8566a8e49fdc25b5))
+
 ## [0.2.0](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.1.0...v0.2.0) (2026-03-15)
 
 
