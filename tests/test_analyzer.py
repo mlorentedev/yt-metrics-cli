@@ -4,8 +4,9 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from googleapiclient.errors import HttpError
 
-from src.analyzer import YouTubeChannelAnalyzer
+from src.analyzer import YouTubeChannelAnalyzer, _execute_with_retry
 
 
 @pytest.fixture()
@@ -181,3 +182,67 @@ class TestGetMultipleChannels:
     def test_empty_channel_list(self, analyzer: YouTubeChannelAnalyzer) -> None:
         result = analyzer.get_multiple_channels_videos([], max_results_per_channel=5)
         assert result == []
+
+
+class TestExecuteWithRetry:
+    """Tests for exponential backoff retry logic."""
+
+    def test_succeeds_on_first_try(self) -> None:
+        request = MagicMock()
+        request.execute.return_value = {"items": []}
+        result = _execute_with_retry(request)
+        assert result == {"items": []}
+        assert request.execute.call_count == 1
+
+    @patch("src.analyzer.time.sleep")
+    def test_retries_on_403(self, mock_sleep: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status = 403
+        error = HttpError(resp, b"quotaExceeded")
+
+        request = MagicMock()
+        request.execute.side_effect = [error, {"items": []}]
+
+        result = _execute_with_retry(request)
+        assert result == {"items": []}
+        assert request.execute.call_count == 2
+        mock_sleep.assert_called_once_with(1.0)
+
+    @patch("src.analyzer.time.sleep")
+    def test_retries_on_429(self, mock_sleep: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status = 429
+        error = HttpError(resp, b"rate limited")
+
+        request = MagicMock()
+        request.execute.side_effect = [error, error, {"ok": True}]
+
+        result = _execute_with_retry(request)
+        assert result == {"ok": True}
+        assert request.execute.call_count == 3
+        assert mock_sleep.call_count == 2
+
+    @patch("src.analyzer.time.sleep")
+    def test_raises_after_max_retries(self, mock_sleep: MagicMock) -> None:
+        resp = MagicMock()
+        resp.status = 429
+        error = HttpError(resp, b"rate limited")
+
+        request = MagicMock()
+        request.execute.side_effect = error
+
+        with pytest.raises(HttpError):
+            _execute_with_retry(request)
+        assert request.execute.call_count == 4  # 1 initial + 3 retries
+
+    def test_does_not_retry_on_400(self) -> None:
+        resp = MagicMock()
+        resp.status = 400
+        error = HttpError(resp, b"bad request")
+
+        request = MagicMock()
+        request.execute.side_effect = error
+
+        with pytest.raises(HttpError):
+            _execute_with_retry(request)
+        assert request.execute.call_count == 1

@@ -1,6 +1,7 @@
 """YouTube channel analysis and API interaction."""
 
 import logging
+import time
 from typing import Any
 
 import googleapiclient.discovery
@@ -10,6 +11,28 @@ from .config import get_settings
 from .metrics import calculate_engagement_metrics
 
 logger = logging.getLogger(__name__)
+
+MAX_RETRIES = 3
+BASE_DELAY = 1.0
+
+
+def _execute_with_retry(request: Any) -> dict[str, Any]:
+    """Execute an API request with exponential backoff on quota/rate errors."""
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            result: dict[str, Any] = request.execute()
+            return result
+        except HttpError as e:
+            if e.resp.status in (403, 429) and attempt < MAX_RETRIES:
+                delay = BASE_DELAY * (2 ** attempt)
+                logger.warning(
+                    "API rate limit (HTTP %d), retry %d/%d in %.1fs...",
+                    e.resp.status, attempt + 1, MAX_RETRIES, delay,
+                )
+                time.sleep(delay)
+            else:
+                raise
+    return {}  # unreachable but satisfies mypy
 
 
 class YouTubeChannelAnalyzer:
@@ -52,7 +75,7 @@ class YouTubeChannelAnalyzer:
     def get_channel_id_from_username(self, username: str) -> str:
         """Resolve channel ID from legacy username."""
         request = self.youtube.channels().list(part="id", forUsername=username)
-        response: dict[str, Any] = request.execute()
+        response = _execute_with_retry(request)
 
         if "items" in response and len(response["items"]) > 0:
             return str(response["items"][0]["id"])
@@ -67,7 +90,7 @@ class YouTubeChannelAnalyzer:
         request = self.youtube.search().list(
             part="snippet", q=custom_url, type="channel", maxResults=1
         )
-        response: dict[str, Any] = request.execute()
+        response = _execute_with_retry(request)
 
         if "items" in response and len(response["items"]) > 0:
             return str(response["items"][0]["snippet"]["channelId"])
@@ -77,7 +100,7 @@ class YouTubeChannelAnalyzer:
     def get_channel_info(self, channel_id: str) -> dict[str, Any]:
         """Get channel metadata and statistics."""
         request = self.youtube.channels().list(part="snippet,statistics", id=channel_id)
-        response: dict[str, Any] = request.execute()
+        response = _execute_with_retry(request)
 
         if "items" not in response or len(response["items"]) == 0:
             msg = f"No channel found with ID: {channel_id}"
@@ -159,7 +182,7 @@ class YouTubeChannelAnalyzer:
     def _get_uploads_playlist(self, channel_id: str) -> str:
         """Get the uploads playlist ID for a channel."""
         request = self.youtube.channels().list(part="contentDetails", id=channel_id)
-        response: dict[str, Any] = request.execute()
+        response = _execute_with_retry(request)
 
         if "items" not in response or len(response["items"]) == 0:
             msg = f"No channel found with ID: {channel_id}"
@@ -183,7 +206,7 @@ class YouTubeChannelAnalyzer:
                 maxResults=min(50, max_results - len(videos)),
                 pageToken=next_page_token,
             )
-            response: dict[str, Any] = request.execute()
+            response = _execute_with_retry(request)
 
             for item in response["items"]:
                 video_id = item["contentDetails"]["videoId"]
@@ -219,7 +242,7 @@ class YouTubeChannelAnalyzer:
             request = self.youtube.videos().list(
                 part="statistics,contentDetails", id=",".join(video_ids)
             )
-            response: dict[str, Any] = request.execute()
+            response = _execute_with_retry(request)
 
             stats_map: dict[str, dict[str, Any]] = {}
             for item in response.get("items", []):

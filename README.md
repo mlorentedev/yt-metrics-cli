@@ -1,133 +1,110 @@
-# YouTube Toolkit
+# youtube-toolkit
 
-A Python CLI application for analyzing YouTube channels and downloading video transcripts. Built with a modular architecture for maintainability and extensibility.
+[![CI](https://github.com/mlorentedev/youtube-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/mlorentedev/youtube-toolkit/actions/workflows/ci.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-Starlight-purple)](https://mlorentedev.github.io/youtube-toolkit/)
 
-## Features
+CLI tool that analyzes YouTube channels and downloads video transcripts, generating engagement metrics and structured reports.
 
-* **Channel Analysis:** Analyze multiple YouTube channels simultaneously
-* **API Key Validation:** Validates YouTube API key before operations with helpful error messages
-* **Comprehensive Metrics:** Engagement rates, view rates, performance distribution
-* **Multiple Export Formats:** CSV data, detailed TXT reports, URL lists
-* **Transcript Downloader:** Multi-language support with automatic fallback
-* **Self-Documenting Output:** Each analysis generates a README explaining all files
+## Problem
+
+YouTube Studio gives you analytics for **your own** channels. If you want to compare multiple channels, benchmark engagement rates, or bulk-download transcripts for research, you're stuck with manual work or fragmented browser extensions.
+
+**youtube-toolkit** solves this: point it at a list of channels, get CSV data, engagement reports, and transcript files in one command.
 
 ## Quick Start
 
-### Prerequisites
-
-* **Python 3.12+**
-* **Poetry** - `pip install poetry`
-* **Task (Taskfile)** - `go install github.com/go-task/task/v3/cmd/task@latest`
-* **YouTube Data API Key** - [Get API Key](https://developers.google.com/youtube/v3/getting-started)
-
-### Installation
-
 ```bash
-git clone <repository-url>
-cd youtube-toolkit
-task install
+# Install
+pip install youtube-toolkit
+# or
+uv tool install youtube-toolkit
+
+# Set your API key
+export YOUTUBE_API_KEY=your_key_here
+# Get one at: https://console.cloud.google.com/apis/credentials
+
+# Create channels.yml
+cat > channels.yml << 'EOF'
+- custom_url: "@mkbhd"
+- custom_url: "@veritasium"
+EOF
+
+# Analyze
+youtube-toolkit channels
 ```
 
-### Configuration
+## Features
 
-Create `.env` file:
-
-```ini
-# Required
-YOUTUBE_API_KEY=your-youtube-api-key-here
-
-# Optional
-MAX_RESULTS_PER_CHANNEL=100
-OUTPUT_DIR=./output
-VIDEO_ID=dQw4w9WgXcQ
-```
-
-Create `channels.yml`:
-
-```yaml
-- custom_url: "@technotim"
-- custom_url: "@christianlempa"
-- channel_id: "UCxxxxxxxxxxxxxx"
-```
+| Feature | Description |
+|---------|-------------|
+| Multi-channel analysis | Analyze N channels in one run |
+| Engagement metrics | View rate, like rate, comment rate, viral detection |
+| CSV export | Raw data with all computed fields |
+| Text reports | Channel stats, trends, top/latest video URLs |
+| Transcript download | Multi-language with 3-level fallback chain |
+| API resilience | Exponential backoff on rate limits (403/429) |
 
 ## Usage
 
 ### Analyze Channels
 
 ```bash
-task run:channels
+youtube-toolkit channels                        # Use defaults from .env
+youtube-toolkit channels -c my_channels.yml     # Custom channel list
+youtube-toolkit channels -n 100 -o ./reports    # 100 videos, custom output
 ```
 
 Generates timestamped reports in `output/<timestamp>/`:
-* **README.md** - Explains all generated files
-* **CSV** - Raw data with all metrics
-* **Channel Stats** - Per-channel detailed analysis (top 5 videos)
-* **Engagement Trends** - Cross-channel comparisons
-* **Best Videos** - Top 15 by engagement (URLs)
-* **Latest Videos** - 15 most recent (URLs)
 
-Each analysis run creates a separate timestamped folder (e.g., `output/20231123_143022/`) to keep results organized.
+- **CSV** — Raw data with all metrics per video
+- **Channel Stats** — Per-channel analysis with top 5 videos
+- **Engagement Trends** — Cross-channel comparisons and rankings
+- **Best/Latest Videos** — URL lists for quick access
+- **README** — Index explaining all generated files
 
-### Download Transcript
+### Download Transcripts
 
 ```bash
-task run:video
-
-# Or specify video ID
-poetry run python -m src.main video <video_id> --langs en,es
+youtube-toolkit transcript -v dQw4w9WgXcQ       # Specific video
+youtube-toolkit transcript -v abc123 -l es,en    # Language preference
 ```
 
 ## Engagement Metrics
 
-| Metric | Formula | Use Case |
-|--------|---------|----------|
-| Engagement Rate (Views) | `(likes + comments) / views × 100` | Audience interaction |
-| View Rate | `views / subscribers × 100` | Viral potential (>100%) |
-| Like Rate | `likes / views × 100` | Content satisfaction |
-| Comment Rate | `comments / views × 100` | Discussion level |
+| Metric | Formula | Interpretation |
+|--------|---------|----------------|
+| Engagement Rate | `(likes + comments) / views * 100` | Overall audience interaction |
+| View Rate | `views / subscribers * 100` | Reach beyond subscriber base (>100% = viral) |
+| Like Rate | `likes / views * 100` | Content satisfaction signal |
+| Comment Rate | `comments / views * 100` | Discussion engagement level |
 
-## Project Structure
+## Configuration
 
-```
-src/
-├── main.py          # CLI entry point
-├── config.py        # Configuration & constants
-├── metrics.py       # Engagement calculations
-├── transcript.py    # Transcript downloader
-├── analyzer.py      # YouTube API wrapper
-└── exporters.py     # Report generators
-```
+All settings can be set via environment variables or `.env` file:
 
-### Key Design Principles
-
-* Type hints throughout for IDE support
-* Runtime validation with clear error messages
-* Modular architecture for maintainability
-* Batch API processing (50 videos per request)
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `YOUTUBE_API_KEY` | *(required)* | YouTube Data API v3 key |
+| `MAX_RESULTS_PER_CHANNEL` | `50` | Videos to fetch per channel |
+| `OUTPUT_DIR` | `./output` | Report output directory |
+| `CHANNELS_FILE` | `channels.yml` | Channel list file path |
+| `VIDEO_ID` | — | Default video for transcript mode |
+| `TRANSCRIPT_LANGUAGES` | `es,en` | Preferred transcript languages |
 
 ## Development
 
 ```bash
-# Update dependencies
-task update
-
-# Poetry shell
-task shell
-
-# Run in development
-poetry run python -m src.main channels --help
+git clone https://github.com/mlorentedev/youtube-toolkit.git
+cd youtube-toolkit
+make install    # Create venv + install deps
+make check      # Lint + typecheck + test
+make build      # Full build
 ```
 
-## Environment Variables Reference
-
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `YOUTUBE_API_KEY` | ✅ | - | YouTube Data API v3 key |
-| `MAX_RESULTS_PER_CHANNEL` | No | `50` | Videos per channel |
-| `OUTPUT_DIR` | No | `./output` | Report output directory |
-| `VIDEO_ID` | No | - | Default video for transcripts |
-| `YOUTUBE_TRANSCRIPT_FIXTURES_DIR` | No | - | Local transcript fallback |
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
-See LICENSE file for details.
+[MIT](LICENSE)
