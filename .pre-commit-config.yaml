@@ -40,13 +40,19 @@ repos:
     hooks:
       - id: ruff-check
         name: ruff lint
-        description: Same command as `make lint` and the CI lint step.
+        # "Same toolchain", not "same command": CI runs `ruff check src/ tests/`, the hook
+        # runs it on the staged files. `--force-exclude` is what keeps the two sets equal —
+        # without it ruff ignores its own exclude settings for paths named on the command
+        # line, and pre-commit always names paths. Measured 2026-09-22 on a probe file under
+        # `.venv/` (a ruff default exclusion): without the flag 2 errors, with it "No Python
+        # files found" — i.e. the flag enforces exclusions, it does not override them.
+        description: Same ruff version and rule set as `make lint` and the CI lint step, over the staged files.
         language: system
         types: [python]
         entry: uv run ruff check --force-exclude
       - id: mypy-strict
         name: mypy --strict
-        description: Same command as `make typecheck` and the CI type-check step.
+        description: Same as `make typecheck` and the CI type-check step (`uv run mypy src/`).
         language: system
         pass_filenames: false
         entry: uv run mypy src/
