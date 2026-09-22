@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.5...v0.2.6) (2026-09-22)
+
+
+### Documentation
+
+* correct two false claims in AGENTS.md, and add lesson-012 on the shared GraphQL quota ([#83](https://github.com/mlorentedev/yt-metrics-cli/issues/83)) ([e0a3049](https://github.com/mlorentedev/yt-metrics-cli/commit/e0a304964411e78265643b6d9dd0aff2937439e1))
+
 ## [0.2.5](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.4...v0.2.5) (2026-09-07)
 
 
