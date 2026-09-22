@@ -21,6 +21,22 @@ make site     # build documentation site
 make site-dev # start docs dev server
 ```
 
+## Pre-commit hooks
+
+`.pre-commit-config.yaml` runs gitleaks (never commit a credential), ruff lint and
+`mypy --strict` — the last two through `uv run`, so they are the same commands CI runs.
+
+There is usually nothing to install. This machine dispatches git hooks machine-wide
+(`core.hooksPath`, GUARD-001), and that dispatcher chains any repo-local
+`.pre-commit-config.yaml` — so the hooks fire on `git commit` without `pre-commit install`.
+On a machine without the dispatcher, run `pre-commit install` once per clone.
+
+Bypass a hook only with explicit approval, and never for `gitleaks`:
+
+```bash
+SKIP=ruff-check git commit ...
+```
+
 ## Pull Requests
 
 1. Create a feature branch from `master`

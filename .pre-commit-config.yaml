@@ -1,0 +1,70 @@
+# Threat model: code repo. Agents may paste secrets into test fixtures, env
+# samples, or doc snippets. gitleaks blocks them before they reach git history.
+#
+# Setup (one-time):
+#   pre-commit install
+#
+# Bypass (only with explicit user approval):
+#   SKIP=gitleaks git commit ...
+
+# Pin the stage. A hook that declares no stages of its own defaults to EVERY
+# stage, which was harmless while .git/hooks/ held only what `pre-commit install`
+# wrote. GUARD-001 dispatches hooks machine-wide via core.hooksPath, so every hook
+# type git fires now reaches `pre-commit hook-impl` and a stage-agnostic hook runs
+# once per type — measured at 3 gitleaks runs per commit, plus one per checkout and
+# one per push. Results were correct; the work was triple. A hook that genuinely
+# needs another stage declares it explicitly and is unaffected: an explicit stage
+# beats this default.
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # --- Repo-specific hooks (CHORE-006, #33) -------------------------------------
+  # The gitleaks block above is the canon template in `dotf init`, kept verbatim so
+  # a `dotf init` re-run stays a no-op; the hooks below are this repo's additions.
+  #
+  # Both run the repo's own toolchain through `uv`, which is the same binary CI calls
+  # (`uv run ruff check src/ tests/`, `uv run mypy src/`). A pinned third-party hook
+  # would be a second ruff and a second mypy, free to disagree with the ones the gate
+  # actually uses; `language: system` + `uv run` makes that impossible.
+  #
+  # `ruff-format` is deliberately absent: `ruff format --check` currently reports 11
+  # files that would be reformatted, so the hook would either block every commit or
+  # drag an 11-file reformat through an unrelated change. That is its own decision —
+  # tracked as a ticket rather than smuggled in here.
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff lint
+        # "Same toolchain", not "same command": CI runs `ruff check src/ tests/`, the hook
+        # runs it on the staged files. `--force-exclude` is what keeps the two sets equal —
+        # without it ruff ignores its own exclude settings for paths named on the command
+        # line, and pre-commit always names paths. Measured 2026-09-22 on a probe file under
+        # `.venv/` (a ruff default exclusion): without the flag 2 errors, with it "No Python
+        # files found" — i.e. the flag enforces exclusions, it does not override them.
+        description: Same ruff version and rule set as `make lint` and the CI lint step, over the staged files.
+        language: system
+        types: [python]
+        entry: uv run ruff check --force-exclude
+      - id: mypy-strict
+        name: mypy --strict
+        description: Same as `make typecheck` and the CI type-check step (`uv run mypy src/`).
+        language: system
+        pass_filenames: false
+        entry: uv run mypy src/
+
+  # Trailing whitespace and a missing final newline are the two hygiene defects every
+  # editor leaves behind and no linter here looks for. Both hooks are no-ops on this
+  # tree as of 2026-09-22 (measured: zero tracked files with trailing whitespace, zero
+  # without a final newline), so they cost nothing today and stop the drift from
+  # starting. v6.0.0 is the upstream latest release and is already in use across the
+  # fleet, so the pin is a verified tag rather than a guess.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
