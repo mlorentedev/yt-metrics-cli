@@ -1,0 +1,24 @@
+# Threat model: code repo. Agents may paste secrets into test fixtures, env
+# samples, or doc snippets. gitleaks blocks them before they reach git history.
+#
+# Setup (one-time):
+#   pre-commit install
+#
+# Bypass (only with explicit user approval):
+#   SKIP=gitleaks git commit ...
+
+# Pin the stage. A hook that declares no stages of its own defaults to EVERY
+# stage, which was harmless while .git/hooks/ held only what `pre-commit install`
+# wrote. GUARD-001 dispatches hooks machine-wide via core.hooksPath, so every hook
+# type git fires now reaches `pre-commit hook-impl` and a stage-agnostic hook runs
+# once per type — measured at 3 gitleaks runs per commit, plus one per checkout and
+# one per push. Results were correct; the work was triple. A hook that genuinely
+# needs another stage declares it explicitly and is unaffected: an explicit stage
+# beats this default.
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks

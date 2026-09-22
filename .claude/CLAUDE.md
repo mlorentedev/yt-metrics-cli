@@ -1,53 +1,22 @@
-# yt-metrics-cli
+# CLAUDE.md
 
-> CLI for YouTube channel analysis and transcript downloading.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Architecture
+> **Read [`AGENTS.md`](../AGENTS.md) first.** It is the agent SSOT for this repo and carries the
+> content that used to live here: the architecture layer map and its two invariants, the technical
+> standards table, the Makefile command set, the key-paths table, knowledge placement and the
+> review-gate notes. `AGENTS.md` in turn delegates the behavioural SSOT (Identity, Standing Orders,
+> Decision Hierarchy, Model Selection, Neural Hive protocol) to the canonical dotfiles `AGENTS.md`.
+>
+> This file overlays only Claude Code-specific notes on top of `AGENTS.md`. Keep it a thin pointer —
+> durable rules belong in `AGENTS.md` so every agent (Claude, Copilot, Cursor, Codex) sees them.
 
-- **CLI Layer:** `src/main.py` — Entry point with `channels` and `transcript` commands
-- **Config:** `src/config.py` — pydantic-settings based configuration
-- **Core:** `src/analyzer.py` — YouTube API wrapper (channel resolution, batch video stats, exponential backoff)
-- **Metrics:** `src/metrics.py` — Pure engagement calculations (6 computed fields)
-- **Transcript:** `src/transcript.py` — Transcript download with 3-level fallback and video ID validation
-- **Export:** `src/exporters/` — Report generators package (CSV, TXT, README, URL)
+## Claude Code-specific notes
 
-## Technical Standards
-
-| Requirement | Tool/Pattern |
-|---|---|
-| Python | 3.12+ |
-| Type hints | mypy --strict |
-| Dependencies | uv |
-| Formatting | Ruff |
-| Testing | pytest + pytest-cov |
-| CLI | Typer + Rich |
-| Config | pydantic-settings |
-| Build | hatchling |
-
-## Key Paths
-
-| Path | Role |
-|---|---|
-| `src/main.py` | CLI entry point (Typer app) |
-| `src/config.py` | Configuration via pydantic-settings |
-| `src/analyzer.py` | YouTube API wrapper with retry logic |
-| `src/metrics.py` | Engagement metric calculations |
-| `src/transcript.py` | Transcript downloader with fallback chain |
-| `src/exporters/` | Report generators (csv, text, readme, url) |
-| `tests/` | pytest suite (77 tests, 83% coverage) |
-| `site/` | Astro Starlight documentation |
-
-## Verification Commands
-
-All commands go through the Makefile:
-
-```bash
-make install    # Create venv + install deps
-make lint       # Ruff linter
-make typecheck  # mypy --strict
-make test       # pytest with coverage
-make check      # lint + typecheck + test
-make build      # check + uv build
-make run        # Run channel analysis
-make clean      # Remove build artifacts
-```
+- **Model tier** (per `AGENTS.md` "Model Selection" in the dotfiles canon): Top tier for hard
+  debugging, root-cause work and architecture; Mid for mechanical refactors, docs and test
+  scaffolding; Low for syntax lookups. Propose a tier change, never switch silently.
+- **MEMORY.md and session memory never live in this repo** — they belong in the vault (GUARD-001).
+  Use Hive as the memory API over the vault, not committed files here.
+- **Reviewer context:** `.pr_agent.toml` names `AGENTS.md` as `repo_context_files`. If this file
+  ever grows back into a second source of truth, the reviewer is reading the stale one.

@@ -59,11 +59,12 @@ max_model_tokens = 200000
 
 response_language = "en-US"
 
-# `.claude/CLAUDE.md` is the only context file that exists here (architecture map,
-# technical standards, verification commands). No root `AGENTS.md` and no root
-# `CLAUDE.md` (both checked 2026-09-06), so naming either would hand the reviewer a
-# source it cannot read: a rule that looks like rigour and asserts nothing.
-repo_context_files = [".claude/CLAUDE.md"]
+# `AGENTS.md` is the agent SSOT here (architecture map, invariants, technical
+# standards, commands, key paths, review-gate notes) and is the only context file
+# worth the reviewer's tokens. Until 2026-09-22 no root `AGENTS.md` existed, so this
+# named `.claude/CLAUDE.md`; that file is now a thin pointer to `AGENTS.md`, and
+# naming it would hand the reviewer the pointer instead of the content.
+repo_context_files = ["AGENTS.md"]
 
 [pr_reviewer]
 require_score_review = false
@@ -95,8 +96,8 @@ Spend the budget on what static analysis cannot see:
 - YouTube Data API quota and retry behaviour: a change that adds a call inside a loop,
   or that retries a non-retryable status, costs quota the user pays for.
 - cross-file consequences a single-hunk reader misses: a claim repeated in README,
-  `.claude/CLAUDE.md`, `site/src/content/docs/` and the CLI `--help` text where only
-  one of them is edited.
+  `AGENTS.md`, `site/src/content/docs/` and the CLI `--help` text where only one of
+  them is edited.
 - anything that puts a credential (YouTube API key, tokens) in a transcript, a log
   line, an argv or an exported report, including in documentation examples.
 
