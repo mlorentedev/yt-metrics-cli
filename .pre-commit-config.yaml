@@ -22,3 +22,31 @@ repos:
     rev: v8.30.1
     hooks:
       - id: gitleaks
+
+  # --- Repo-specific hooks (CHORE-006, #33) -------------------------------------
+  # The gitleaks block above is the canon template in `dotf init`, kept verbatim so
+  # a `dotf init` re-run stays a no-op; the hooks below are this repo's additions.
+  #
+  # Both run the repo's own toolchain through `uv`, which is the same binary CI calls
+  # (`uv run ruff check src/ tests/`, `uv run mypy src/`). A pinned third-party hook
+  # would be a second ruff and a second mypy, free to disagree with the ones the gate
+  # actually uses; `language: system` + `uv run` makes that impossible.
+  #
+  # `ruff-format` is deliberately absent: `ruff format --check` currently reports 11
+  # files that would be reformatted, so the hook would either block every commit or
+  # drag an 11-file reformat through an unrelated change. That is its own decision —
+  # tracked as a ticket rather than smuggled in here.
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff lint
+        description: Same command as `make lint` and the CI lint step.
+        language: system
+        types: [python]
+        entry: uv run ruff check --force-exclude
+      - id: mypy-strict
+        name: mypy --strict
+        description: Same command as `make typecheck` and the CI type-check step.
+        language: system
+        pass_filenames: false
+        entry: uv run mypy src/
