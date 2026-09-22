@@ -56,3 +56,15 @@ repos:
         language: system
         pass_filenames: false
         entry: uv run mypy src/
+
+  # Trailing whitespace and a missing final newline are the two hygiene defects every
+  # editor leaves behind and no linter here looks for. Both hooks are no-ops on this
+  # tree as of 2026-09-22 (measured: zero tracked files with trailing whitespace, zero
+  # without a final newline), so they cost nothing today and stop the drift from
+  # starting. v6.0.0 is the upstream latest release and is already in use across the
+  # fleet, so the pin is a verified tag rather than a guess.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
