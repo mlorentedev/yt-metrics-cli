@@ -23,8 +23,9 @@ make site-dev # start docs dev server
 
 ## Pre-commit hooks
 
-`.pre-commit-config.yaml` runs gitleaks (never commit a credential), ruff lint and
-`mypy --strict` — the last two through `uv run`, so they are the same commands CI runs.
+`.pre-commit-config.yaml` runs gitleaks (never commit a credential), ruff lint, `mypy --strict`
+and the two file-hygiene fixers (trailing whitespace, missing final newline) — the middle two
+through `uv run`, so they are the same commands CI runs.
 
 There is usually nothing to install. This machine dispatches git hooks machine-wide
 (`core.hooksPath`, GUARD-001), and that dispatcher chains any repo-local
