@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.7](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.6...v0.2.7) (2026-10-08)
+
+
+### Bug Fixes
+
+* **ci:** move PR-Agent off the retired mimo-v2.5 model ([#89](https://github.com/mlorentedev/yt-metrics-cli/issues/89)) ([043cd83](https://github.com/mlorentedev/yt-metrics-cli/commit/043cd832e9829546f2ab8f83a3a6d5b4d1fe840e))
+
 ## [0.2.6](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.5...v0.2.6) (2026-09-22)
 
 
