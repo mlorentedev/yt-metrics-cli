@@ -41,6 +41,14 @@ a **human-driven rebase** of a Dependabot branch runs the job (measured: `actor=
 failing run, `actor=dependabot[bot]` on the sibling runs that were skipped). Every Dependabot PR in
 this repo is lockfile-only, so every hand-rebase of one reproduces it.
 
+Re-measured 2026-10-18 on PR #98 (`fix(deps): upgrade urllib3 to 2.8.0`), run `39162511960`: the
+branch was **authored by an agent, not rebased**, `actor=mlorentedev` on a normal PR event, and the
+guard failed identically (`PR-Agent reported success but published no review` … `Most likely cause:
+NaN concurrency exhaustion`). CodeRabbit skipped the same diff with a more honest message
+(`uv.lock is excluded by !**/*.lock`). So the actor clause only decides *who runs the job*; the
+**trigger is a whole diff covered by `[ignore]`**, whoever wrote it. Any future lockfile-only PR —
+a dependency bump by an agent, a lock resync — reproduces this red check.
+
 **Solution:** (1) Read the job's own log before believing its summary line — the guard's
 "most likely cause" is a guess, the `Empty diff for PR` line is evidence. (2) Do not let the red
 check block the bump: the diff is a lockfile, CI green is the whole verdict, so merge it with the
@@ -48,11 +56,17 @@ check block the bump: the diff is a lockfile, CI green is the whole verdict, so 
 pretending a review happened. (3) Prefer `@dependabot rebase` over the UI's "Update branch": the
 Dependabot actor is what makes the job skip, and a skipped check is honest where a red one is a
 false alarm. (4) Record the disposition under `## Review triage` even when it is "no reviewer could
-run".
+run". (5) Where the change can carry a reviewable file — a lesson, a changelog line, the rationale
+itself — add it to the same PR: the guard then has something to read and the red disappears without
+any exemption. That is what PR #98 did (this paragraph), and it is the cheapest way out of the
+class until the gate skips an empty diff on its own.
 **Why:** Failing closed is right; guessing the cause in the failure message is not, because the
 message is what the next reader trusts. This is a class, not an incident: `mlorentedev/dotfiles#1417`
-(open) documents the same guard misfiring when an entire diff is `[ignore]`d for a different reason
-(SOPS ciphertext), and asks for exactly this measurement. An `[ignore] glob` that covers a PR's whole
-diff makes that PR unreviewable *by construction* — the fix belongs in the gate (detect it and
-declare the PR unreviewed), not in the reader's patience.
+(closed 2026-10-04) documents the same guard misfiring when an entire diff is `[ignore]`d for a
+different reason (SOPS ciphertext), and asks for exactly this measurement. An `[ignore] glob` that
+covers a PR's whole diff makes that PR unreviewable *by construction* — the fix belongs in the gate
+(detect it and declare the PR unreviewed), not in the reader's patience. **That fix has not reached
+this repo:** the class fired again on 2026-10-18, two weeks after the upstream issue closed, because
+`.github/workflows/pr-agent.yml` here has no pre-flight step that skips when the reviewable diff is
+empty. Tracked as CI-001 (#100).
 **Tags:** `#ci` `#pr-agent` `#review-gate` `#misdiagnosis`
