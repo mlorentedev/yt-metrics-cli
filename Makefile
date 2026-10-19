@@ -11,8 +11,13 @@ lint: ## Run ruff linter
 	uv run ruff check src/ tests/
 
 # Same check CI runs (ci.yml, "Lockfile matches pyproject"): the lock must agree with
-# pyproject.toml, so a version bump that skipped `uv lock` fails Locally first instead of
+# pyproject.toml, so a version bump that skipped `uv lock` fails locally first instead of
 # on the 3.12 leg after a push. BUG-001 (#81), lesson-013.
+#
+# IT MUST STAY FIRST IN `check`. Every `uv run` below synchronises the project first and
+# rewrites uv.lock when it is stale, so `lint` would repair the drift and hand `lock` an
+# already-synced file: a green `make check` over an uncommitted lock diff -- the exact
+# symptom this target exists to prevent (PR-Agent on #102, measured in #81).
 lock: ## Fail if uv.lock is out of sync with pyproject.toml
 	uv lock --check
 
@@ -22,7 +27,7 @@ typecheck: ## Run mypy --strict
 test: ## Run tests with coverage
 	uv run pytest tests/ -v --cov=src --cov-report=term-missing
 
-check: lint lock typecheck test ## Lint + lock + typecheck + test
+check: lock lint typecheck test ## Lock + lint + typecheck + test
 
 build: check ## Check + build package
 	uv build

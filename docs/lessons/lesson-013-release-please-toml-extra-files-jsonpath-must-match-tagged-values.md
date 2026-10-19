@@ -90,4 +90,12 @@ entry — was a dead letter, and the TOML selector above would have selected not
 new CI guard turned every release red for a reason no one could see in the diff. Caught by CodeRabbit
 on PR #102 and confirmed in the action's source; it is the same lesson in a different costume: **the
 fix and the wiring that makes the fix run are two different things to verify.**
+**Fourth trap, the guard that defuses itself (PR-Agent, #102 — measured, not accepted on faith):** every
+`uv run` target synchronises the project before it runs, and synchronising **rewrites** a stale
+`uv.lock`. So `check: lint lock typecheck test` hands the guard an already-repaired file: on a copy
+with `pyproject.toml` at 0.2.8 and the lock at 0.2.7, one `uv run ruff --version` changed the lock to
+0.2.8, and the `lock` target that ran afterwards exited 0 — a green `make check` over an uncommitted
+diff, which is the entire symptom this work exists to end. The order in a Makefile prerequisite list
+is load-bearing: `check: lock lint typecheck test`. CI is immune only because its `uv lock --check`
+step runs before any `uv run`.
 **Tags:** `#ci` `#release-please` `#toml` `#uv` `#silent-failure`
