@@ -64,7 +64,13 @@ node -e "
 anyone reads: `uv lock --check` in CI, which exits 1 with `The lockfile at uv.lock needs to be
 updated` (measured by bumping a copy's `pyproject.toml` to 0.2.8 and watching it fail). A selector
 that quietly stops matching then turns into a red build with the file and the command named, instead
-of a release that ships a stale lock.
+of a release that ships a stale lock. Put the same guard in `make check`, or the repo's claim that
+"`make check` is the same gate CI runs" quietly stops being true and the first signal is a red 3.12
+leg after a push (CodeRabbit, #102). And make the step distinguish the two ways it can fail: drift
+prints "needs to be updated", a resolution failure (index unreachable, a yanked version) does not —
+telling the second reader to run `uv lock` would have them rewrite the lock from whatever their
+machine can see. Both branches were exercised before merging; the resolution case was produced with
+`UV_DEFAULT_INDEX=https://127.0.0.1:9/simple`.
 **Why:** this class recurs wherever release-please is pointed at a TOML file whose version is not at
 `$.version` — the documented examples (`hive`, `pdf-modifier-mcp`) are all `type: json` on
 `server.json`, where a filter on `name` *does* work, because the JSON updater does not tag its values.

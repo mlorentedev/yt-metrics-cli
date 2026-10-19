@@ -1,4 +1,4 @@
-.PHONY: help install lint typecheck test check build clean run site site-dev site-preview
+.PHONY: help install lint lock typecheck test check build clean run site site-dev site-preview
 .DEFAULT_GOAL := help
 
 help: ## Show this help
@@ -10,13 +10,19 @@ install: ## Create venv and install deps
 lint: ## Run ruff linter
 	uv run ruff check src/ tests/
 
+# Same check CI runs (ci.yml, "Lockfile matches pyproject"): the lock must agree with
+# pyproject.toml, so a version bump that skipped `uv lock` fails Locally first instead of
+# on the 3.12 leg after a push. BUG-001 (#81), lesson-013.
+lock: ## Fail if uv.lock is out of sync with pyproject.toml
+	uv lock --check
+
 typecheck: ## Run mypy --strict
 	uv run mypy src/
 
 test: ## Run tests with coverage
 	uv run pytest tests/ -v --cov=src --cov-report=term-missing
 
-check: lint typecheck test ## Lint + typecheck + test
+check: lint lock typecheck test ## Lint + lock + typecheck + test
 
 build: check ## Check + build package
 	uv build

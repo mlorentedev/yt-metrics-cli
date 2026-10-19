@@ -40,12 +40,24 @@ jobs:
       - name: Lockfile matches pyproject
         if: matrix.python-version == '3.12'
         run: |
-          if ! uv lock --check; then
+          # Two different failures land here and they deserve different words. "The
+          # lockfile ... needs to be updated" is the drift this step exists for; anything
+          # else is uv failing to RESOLVE at all (index unreachable, a yanked version),
+          # and telling that reader to run `uv lock` would send them to rewrite the lock
+          # from whatever their machine can see. lesson-011's rule: a failed check may
+          # fail closed, but it may not guess the cause in the message.
+          if out=$(uv lock --check 2>&1); then
+            exit 0
+          fi
+          printf '%s\n' "$out"
+          if printf '%s' "$out" | grep -q 'needs to be updated'; then
             echo "::error::uv.lock is out of sync with pyproject.toml -- most likely a version bump that did not regenerate the lock (BUG-001, #81)."
             echo "::error::Fix: run 'uv lock' and commit uv.lock into this branch."
-            echo "::error::If this branch touched neither pyproject.toml nor the dependency list, suspect the pinned uv version above before the lock."
-            exit 1
+          else
+            echo "::error::uv could not verify the lock at all -- this is a resolution failure, NOT drift. Do not regenerate the lock from this output."
+            echo "::error::Check the pinned uv version above, then index reachability, then whether a pinned dependency was yanked."
           fi
+          exit 1
 
       - name: Install
         run: uv venv && uv pip install -e ".[dev]"
