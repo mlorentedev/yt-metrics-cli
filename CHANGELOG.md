@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.8](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.7...v0.2.8) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** upgrade urllib3 to 2.8.0 and resync lock to 0.2.7 ([#98](https://github.com/mlorentedev/yt-metrics-cli/issues/98)) ([5e127fe](https://github.com/mlorentedev/yt-metrics-cli/commit/5e127fe87c22b68d60dda6221abb56728aa12e9d))
+* **release:** keep uv.lock in step with the release, and fail closed if it drifts ([#102](https://github.com/mlorentedev/yt-metrics-cli/issues/102)) ([0822d4d](https://github.com/mlorentedev/yt-metrics-cli/commit/0822d4d018bb5638f2a319379addceea226cc8a2))
+
 ## [0.2.7](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.6...v0.2.7) (2026-10-08)
 
 
