@@ -19,7 +19,18 @@ jobs:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         id: release
         with:
-          release-type: python
+          # NO `release-type:` HERE, DELIBERATELY. When that input is set the action
+          # takes the `Manifest.fromConfig` branch (src/index.ts: `if (inputs.releaseType)`)
+          # and builds the configuration FROM THE INPUTS, never reading
+          # release-please-config.json -- so `extra-files`, `bump-minor-pre-major` and
+          # every other setting in that file were dead letters while this line existed.
+          # Removing it drops the action into `fromManifest`, which loads the config and
+          # the manifest by their default names (both match this repo). Caught by
+          # CodeRabbit on #102, confirmed in the action's source rather than assumed.
+          #
+          # Behaviour that CHANGES with this line gone: `bump-minor-pre-major: true`
+          # finally takes effect, so a breaking change while still on 0.x bumps the minor
+          # instead of jumping to 1.0 -- which is what the config has been asking for.
           token: ${{ secrets.RELEASE_TOKEN }}
 
   publish:

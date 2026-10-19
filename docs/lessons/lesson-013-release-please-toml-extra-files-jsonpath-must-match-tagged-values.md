@@ -73,4 +73,15 @@ Copying a working json config to a toml path silently changes the meaning of the
 files to four, and `harness/review-attestation.json` matches exemptions by **set equality** — so the
 same change would have quietly un-exempted every future release PR. Any automation that adds a file
 to a known diff signature has to update the declaration that recognises it, in the same commit.
+**Third trap, and the one that would have shipped a dead fix:** `release-please-action` takes TWO
+different configuration paths depending on whether its `release-type` input is set
+(`src/index.ts`: `if (inputs.releaseType) { Manifest.fromConfig(...) }`). Set the input and the action
+builds the config **from the inputs** and never reads `release-please-config.json`; leave it out and
+it calls `Manifest.fromManifest(configFile, manifestFile)` with the defaults, which are exactly this
+repo's filenames. This workflow passed `release-type: python`, so the whole config file — a
+`bump-minor-pre-major` the repo has been asking for since the start, every future `extra-files`
+entry — was a dead letter, and the TOML selector above would have selected nothing forever while the
+new CI guard turned every release red for a reason no one could see in the diff. Caught by CodeRabbit
+on PR #102 and confirmed in the action's source; it is the same lesson in a different costume: **the
+fix and the wiring that makes the fix run are two different things to verify.**
 **Tags:** `#ci` `#release-please` `#toml` `#uv` `#silent-failure`

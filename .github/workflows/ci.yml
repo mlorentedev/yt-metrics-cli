@@ -18,6 +18,12 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           enable-cache: true
+          # Pinned so the lock guard's verdict changes only when the LOCK changes.
+          # Unpinned, the uv binary floats to latest on every run, and a uv release that
+          # alters lockfile output would turn 'uv lock --check' red on a perfectly synced
+          # lock while the step's message blames a version bump -- the same wrong-cause
+          # failure this repo recorded in lesson-011. PR-Agent raised it on #102.
+          version: "0.12.18"
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
@@ -37,6 +43,7 @@ jobs:
           if ! uv lock --check; then
             echo "::error::uv.lock is out of sync with pyproject.toml -- most likely a version bump that did not regenerate the lock (BUG-001, #81)."
             echo "::error::Fix: run 'uv lock' and commit uv.lock into this branch."
+            echo "::error::If this branch touched neither pyproject.toml nor the dependency list, suspect the pinned uv version above before the lock."
             exit 1
           fi
 
