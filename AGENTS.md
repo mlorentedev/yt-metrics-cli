@@ -56,14 +56,16 @@ All development commands go through the Makefile:
 ```bash
 make install    # uv venv + editable install with dev extras
 make lint       # ruff
+make lock       # uv lock --check (the lock must match pyproject.toml)
 make typecheck  # mypy --strict
 make test       # pytest with coverage
-make check      # lint + typecheck + test  ← run before every PR
+make check      # lock + lint + typecheck + test  ← run before every PR
 make build      # check + uv build
 make site       # build the Starlight docs site (npm ci + build, needs Node)
 ```
 
-`make check` is the same gate CI runs. As of 2026-09-22 the suite is 77 tests at 83% line
+`make check` is the same gate CI runs — including `uv lock --check`, so a lockfile that drifted
+fails locally rather than on the 3.12 leg after a push. As of 2026-09-22 the suite is 77 tests at 83% line
 coverage (720 statements); treat the CI run as authoritative over any number written here.
 
 ## Key paths

@@ -18,9 +18,46 @@ jobs:
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
         with:
           enable-cache: true
+          # Pinned so the lock guard's verdict changes only when the LOCK changes.
+          # Unpinned, the uv binary floats to latest on every run, and a uv release that
+          # alters lockfile output would turn 'uv lock --check' red on a perfectly synced
+          # lock while the step's message blames a version bump -- the same wrong-cause
+          # failure this repo recorded in lesson-011. PR-Agent raised it on #102.
+          version: "0.12.18"
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
+
+      # BUG-001 (#81): uv.lock records this project's own version, and nothing
+      # regenerated it after a release-please merge. Measured twice: 0.2.3 vs
+      # 0.2.5 (2026-09-22) and 0.2.6 vs 0.2.7 (2026-10-18), both surfacing as a
+      # dirty tree on the next local `uv` command rather than as a failure.
+      # release-please now carries the lock bump in the release PR itself
+      # (`extra-files` in release-please-config.json). This step is the net under
+      # that fix: the TOML updater's jsonpath selects by VALUE and reports a
+      # non-match as a log warning, so a silent no-op is the likeliest failure
+      # mode and it has to fail closed somewhere a human looks. See lesson-013.
+      - name: Lockfile matches pyproject
+        if: matrix.python-version == '3.12'
+        run: |
+          # Two different failures land here and they deserve different words. "The
+          # lockfile ... needs to be updated" is the drift this step exists for; anything
+          # else is uv failing to RESOLVE at all (index unreachable, a yanked version),
+          # and telling that reader to run `uv lock` would send them to rewrite the lock
+          # from whatever their machine can see. lesson-011's rule: a failed check may
+          # fail closed, but it may not guess the cause in the message.
+          if out=$(uv lock --check 2>&1); then
+            exit 0
+          fi
+          printf '%s\n' "$out"
+          if printf '%s' "$out" | grep -q 'needs to be updated'; then
+            echo "::error::uv.lock is out of sync with pyproject.toml -- most likely a version bump that did not regenerate the lock (BUG-001, #81)."
+            echo "::error::Fix: run 'uv lock' and commit uv.lock into this branch."
+          else
+            echo "::error::uv could not verify the lock at all -- this is a resolution failure, NOT drift. Do not regenerate the lock from this output."
+            echo "::error::Check the pinned uv version above, then index reachability, then whether a pinned dependency was yanked."
+          fi
+          exit 1
 
       - name: Install
         run: uv venv && uv pip install -e ".[dev]"

@@ -8,7 +8,7 @@
 
 ## Testing
 
-- [ ] `make check` passes (lint + typecheck + tests)
+- [ ] `make check` passes (lock + lint + typecheck + tests)
 - [ ] New tests added for new functionality
 - [ ] Manual testing completed
 

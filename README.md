@@ -99,7 +99,7 @@ All settings can be set via environment variables or `.env` file:
 git clone https://github.com/mlorentedev/yt-metrics-cli.git
 cd yt-metrics-cli
 make install    # Create venv + install deps
-make check      # Lint + typecheck + test
+make check      # Lock check + lint + typecheck + test
 make build      # Full build
 ```
 

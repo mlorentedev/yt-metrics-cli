@@ -11,7 +11,8 @@ make install
 ## Development
 
 ```bash
-make check    # lint + typecheck + test (run before every PR)
+make check    # lock + lint + typecheck + test (run before every PR)
+make lock     # uv lock --check only
 make lint     # ruff only
 make typecheck # mypy --strict only
 make test     # pytest only
