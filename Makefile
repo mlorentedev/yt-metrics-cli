@@ -21,6 +21,12 @@ lint: ## Run ruff linter
 lock: ## Fail if uv.lock is out of sync with pyproject.toml
 	uv lock --check
 
+# Prerequisite order only holds in a serial make. Under `make -j check` (or MAKEFLAGS
+# carrying -j) make may start `lint` alongside `lock`, and the `uv run` inside lint would
+# repair the lock before the check reads it. `.NOTPARALLEL: check` forces the prerequisites
+# of `check` to run serially, which is the one place in this Makefile where order matters.
+.NOTPARALLEL: check
+
 typecheck: ## Run mypy --strict
 	uv run mypy src/
 
