@@ -59,7 +59,7 @@ make lint       # ruff
 make lock       # uv lock --check (the lock must match pyproject.toml)
 make typecheck  # mypy --strict
 make test       # pytest with coverage
-make check      # lint + lock + typecheck + test  ← run before every PR
+make check      # lock + lint + typecheck + test  ← run before every PR
 make build      # check + uv build
 make site       # build the Starlight docs site (npm ci + build, needs Node)
 ```
