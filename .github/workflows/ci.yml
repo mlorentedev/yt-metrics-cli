@@ -22,6 +22,24 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
 
+      # BUG-001 (#81): uv.lock records this project's own version, and nothing
+      # regenerated it after a release-please merge. Measured twice: 0.2.3 vs
+      # 0.2.5 (2026-09-22) and 0.2.6 vs 0.2.7 (2026-10-18), both surfacing as a
+      # dirty tree on the next local `uv` command rather than as a failure.
+      # release-please now carries the lock bump in the release PR itself
+      # (`extra-files` in release-please-config.json). This step is the net under
+      # that fix: the TOML updater's jsonpath selects by VALUE and reports a
+      # non-match as a log warning, so a silent no-op is the likeliest failure
+      # mode and it has to fail closed somewhere a human looks. See lesson-013.
+      - name: Lockfile matches pyproject
+        if: matrix.python-version == '3.12'
+        run: |
+          if ! uv lock --check; then
+            echo "::error::uv.lock is out of sync with pyproject.toml -- most likely a version bump that did not regenerate the lock (BUG-001, #81)."
+            echo "::error::Fix: run 'uv lock' and commit uv.lock into this branch."
+            exit 1
+          fi
+
       - name: Install
         run: uv venv && uv pip install -e ".[dev]"
 

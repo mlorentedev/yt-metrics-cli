@@ -5,7 +5,14 @@
       "release-type": "python",
       "bump-minor-pre-major": true,
       "changelog-path": "CHANGELOG.md",
-      "versioning": "default"
+      "versioning": "default",
+      "extra-files": [
+        {
+          "type": "toml",
+          "path": "uv.lock",
+          "jsonpath": "$.package[?(@.name.value=='yt-metrics-cli')].version"
+        }
+      ]
     }
   }
 }

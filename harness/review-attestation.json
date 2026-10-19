@@ -70,9 +70,10 @@
         "files": [
           ".release-please-manifest.json",
           "CHANGELOG.md",
-          "pyproject.toml"
+          "pyproject.toml",
+          "uv.lock"
         ],
-        "why": "Measured on #57, #40, #16, #13 and #9: exactly these three paths every time (release-type python bumps the version in pyproject.toml, which is why this signature has one file more than the ts-bridge one; #7 predates the manifest and touched CHANGELOG.md alone). Matched by DIFF SIGNATURE with set equality, never by author or branch: release-please runs under a human PAT here (RELEASE_TOKEN, author mlorentedev), so an author rule would not fire, and a branch rule would let any branch named to match walk past the gate. The moment such a PR touches one more file the exemption stops applying, and it stops applying just as surely if one declared file is not touched. This is not 'small PRs need no review': a release commit mechanically restates commits that were each reviewed when they landed, and reporting `declined` on it says something false."
+        "why": "Measured on #57, #40, #16, #13 and #9: exactly three paths every time (release-type python bumps the version in pyproject.toml, which is why this signature has one file more than the ts-bridge one; #7 predates the manifest and touched CHANGELOG.md alone). THE FOURTH FILE IS DELIBERATE AND NEW: since BUG-001's fix (#81) release-please rewrites the lock's own package entry through `extra-files` in `release-please-config.json`, so a release PR now carries `uv.lock` too, and set equality would otherwise stop recognising every release PR the moment the fix landed. The three-file observation above is the pre-fix measurement, not a claim that the signature never changes. Matched by DIFF SIGNATURE with set equality, never by author or branch: release-please runs under a human PAT here (RELEASE_TOKEN, author mlorentedev), so an author rule would not fire, and a branch rule would let any branch named to match walk past the gate. The moment such a PR touches one more file the exemption stops applying, and it stops applying just as surely if one declared file is not touched. This is not 'small PRs need no review': a release commit mechanically restates commits that were each reviewed when they landed, and reporting `declined` on it says something false."
       }
     ]
   }
