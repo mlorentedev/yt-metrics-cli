@@ -49,13 +49,13 @@
       "why": "Provider-diverse: independent of both NaN and Anthropic. Pro tier at high effort; the flash tiers are excluded for the same reason the daily models are. agy has no --provider flag — the model id selects the family. AUTH IS LOGIN, not a key: agy holds an OAuth token and answers with no API key in the environment, so this arm must not be wired to a secret the registry does not declare (dotfiles #1156 found an arm that had never once run for exactly that reason)."
     },
     {
-      "id": "nan/mimo-v2.5",
+      "id": "nan/mimo-v2.6-flash",
       "runner": "pi",
       "provider": "nan",
-      "model": "mimo-v2.5",
+      "model": "mimo-v2.6-flash",
       "secret_id": "NAN_API_KEY",
       "role": "fallback",
-      "why": "Reasoning-class by profile (1M context, reasoning chain). Admitted in the SSOT on 2026-08-20 with its evidence boundary recorded honestly: a real, correct finding was demonstrated on a planted defect, but no quality ranking against deepseek was established, so this entry is not a claim of equivalence. Second fallback, after the provider-diverse arm, because provider diversity is the stronger property.",
+      "why": "Re-admitted 2026-09-30 in the SSOT (mlorentedev/dotfiles harness/reviewer-pool.json) on the bar that file requires, not renamed in. NaN retired its predecessor mimo-v2.5 that day: it hung, then answered 401 'This API key does not have access to the requested model'. The successor was given the same planted-defect test mimo-v2.5 was admitted on (a `((count++))` exit-status-1 case under `set -e`) and found it, named a failing input (count=0) and gave the fix. That is agreement on one planted defect, not a quality ranking against deepseek. It stays a SECOND fallback, after the provider-diverse one, because provider diversity is the stronger property. Profile: 1M context, reasoning chain.",
       "operational_note": "Reasoning models here emit reasoning_content BEFORE content. Under-provisioning max_tokens returns an empty body with finish_reason=length and no error — the same shape as a review that silently did not happen. Provision generously and check finish_reason."
     }
   ]
