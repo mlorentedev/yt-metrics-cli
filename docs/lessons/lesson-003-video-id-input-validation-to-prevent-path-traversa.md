@@ -1,7 +1,8 @@
 ---
-id: lesson-003-video-id-input-validation-to-prevent-path-traversa
+id: "lesson-003-video-id-input-validation-to-prevent-path-traversa"
 type: lesson
 status: active
+title: "Video ID Input Validation to Prevent Path Traversal"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, security, input-validation, path-traversal]

@@ -1,7 +1,8 @@
 ---
-id: lesson-013-release-please-toml-extra-files-jsonpath-must-match-tagged-values
+id: "lesson-013-release-please-toml-extra-files-jsonpath-must-match-tagged-values"
 type: lesson
 status: active
+title: "release-please's TOML `extra-files` jsonpath must match the *tagged* values it parses"
 created: "2026-10-18"
 owner: manu
 tags: [yt-metrics-cli, lesson, ci, release-please, toml, uv, silent-failure]

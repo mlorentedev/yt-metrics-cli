@@ -1,7 +1,8 @@
 ---
-id: lesson-009-graphql-rate-limits-block-board-operations-use-res
+id: "lesson-009-graphql-rate-limits-block-board-operations-use-res"
 type: lesson
 status: active
+title: "GraphQL Rate Limits Block Board Operations — Use REST Fallback"
 created: "2026-06-28"
 owner: manu
 tags: [yt-metrics-cli, lesson, github, graphql, rate-limit, bitacora, gotcha]

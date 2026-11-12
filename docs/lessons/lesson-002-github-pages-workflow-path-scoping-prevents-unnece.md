@@ -1,7 +1,8 @@
 ---
-id: lesson-002-github-pages-workflow-path-scoping-prevents-unnece
+id: "lesson-002-github-pages-workflow-path-scoping-prevents-unnece"
 type: lesson
 status: active
+title: "GitHub Pages Workflow Path Scoping Prevents Unnecessary Deploys"
 created: "2026-03-04"
 owner: manu
 tags: [yt-metrics-cli, lesson, ci, github-actions, github-pages, optimization]

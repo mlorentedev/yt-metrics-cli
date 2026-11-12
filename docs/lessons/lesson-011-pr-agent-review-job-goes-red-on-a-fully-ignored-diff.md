@@ -1,7 +1,8 @@
 ---
-id: lesson-011-pr-agent-review-job-goes-red-on-a-fully-ignored-diff
+id: "lesson-011-pr-agent-review-job-goes-red-on-a-fully-ignored-diff"
 type: lesson
 status: active
+title: "PR-Agent's review job goes red on a fully `[ignore]`d diff and blames the wrong cause"
 created: "2026-09-22"
 owner: manu
 tags: [yt-metrics-cli, lesson, ci, pr-agent, review-gate, misdiagnosis]

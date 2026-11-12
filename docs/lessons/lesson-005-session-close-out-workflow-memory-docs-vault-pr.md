@@ -1,7 +1,8 @@
 ---
-id: lesson-005-session-close-out-workflow-memory-docs-vault-pr
+id: "lesson-005-session-close-out-workflow-memory-docs-vault-pr"
 type: lesson
 status: active
+title: "Session Close-Out Workflow: Memory + Docs + Vault + PR"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, workflow, knowledge-management, session-hygiene]

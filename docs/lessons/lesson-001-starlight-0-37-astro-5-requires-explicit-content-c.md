@@ -1,7 +1,8 @@
 ---
-id: lesson-001-starlight-0-37-astro-5-requires-explicit-content-c
+id: "lesson-001-starlight-0-37-astro-5-requires-explicit-content-c"
 type: lesson
 status: active
+title: "Starlight 0.37 + Astro 5 Requires Explicit content.config.ts"
 created: "2026-03-04"
 owner: manu
 tags: [yt-metrics-cli, lesson, astro, starlight, docs, silent-failure]
