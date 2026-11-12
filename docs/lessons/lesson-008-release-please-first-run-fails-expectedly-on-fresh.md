@@ -1,7 +1,8 @@
 ---
-id: lesson-008-release-please-first-run-fails-expectedly-on-fresh
+id: "lesson-008-release-please-first-run-fails-expectedly-on-fresh"
 type: lesson
 status: active
+title: "release-please First Run Fails Expectedly on Fresh Repos"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, ci, release-please, gotcha]

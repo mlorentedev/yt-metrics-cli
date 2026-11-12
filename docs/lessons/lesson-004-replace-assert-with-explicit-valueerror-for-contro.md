@@ -1,7 +1,8 @@
 ---
-id: lesson-004-replace-assert-with-explicit-valueerror-for-contro
+id: "lesson-004-replace-assert-with-explicit-valueerror-for-contro"
 type: lesson
 status: active
+title: "Replace assert with Explicit ValueError for Control Flow"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, python, clean-code, assert-antipattern]

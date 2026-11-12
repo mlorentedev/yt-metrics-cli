@@ -1,7 +1,8 @@
 ---
-id: lesson-006-ansi-color-codes-in-typer-rich-cli-test-output-bre
+id: "lesson-006-ansi-color-codes-in-typer-rich-cli-test-output-bre"
 type: lesson
 status: active
+title: "ANSI Color Codes in Typer/Rich CLI Test Output Break Assertions"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, testing, cli, typer, rich, ansi]

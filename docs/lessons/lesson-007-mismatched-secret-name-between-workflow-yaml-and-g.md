@@ -1,7 +1,8 @@
 ---
-id: lesson-007-mismatched-secret-name-between-workflow-yaml-and-g
+id: "lesson-007-mismatched-secret-name-between-workflow-yaml-and-g"
 type: lesson
 status: active
+title: "Mismatched Secret Name Between Workflow YAML and GitHub Repo"
 created: "2026-03-14"
 owner: manu
 tags: [yt-metrics-cli, lesson, ci, github-actions, secrets, silent-failure]

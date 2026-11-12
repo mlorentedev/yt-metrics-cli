@@ -1,7 +1,8 @@
 ---
-id: lesson-012-graphql-quota-is-per-user-so-one-session-can-block-ci-releases
+id: "lesson-012-graphql-quota-is-per-user-so-one-session-can-block-ci-releases"
 type: lesson
 status: active
+title: "The GraphQL quota is per *user*, so one session's board queries can block a CI release"
 created: "2026-09-22"
 owner: manu
 tags: [yt-metrics-cli, lesson, github, graphql, rate-limit, ci, release-please]

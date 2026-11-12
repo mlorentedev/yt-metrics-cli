@@ -1,7 +1,8 @@
 ---
-id: lesson-010-gh-project-item-add-can-silently-succeed-without-p
+id: "lesson-010-gh-project-item-add-can-silently-succeed-without-p"
 type: lesson
 status: active
+title: "`gh project item-add` Can Silently Succeed Without Persisting"
 created: "2026-06-28"
 owner: manu
 tags: [yt-metrics-cli, lesson, github, graphql, bitacora, silent-failure]
