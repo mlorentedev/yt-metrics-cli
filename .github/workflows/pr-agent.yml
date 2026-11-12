@@ -44,6 +44,11 @@ jobs:
       pool: embedded
       # Release PRs restate commits each reviewed when it landed.
       skip_branch_prefixes: release-please--
+      # A diff wholly under .pr_agent.toml's [ignore] (a lockfile-only PR) has
+      # nothing to review; without this the job goes red blaming saturation
+      # (docs/lessons lesson-011). The escape label and section are in
+      # harness/review-attestation.json.
+      declare_unreviewed: true
     secrets:
       NAN_API_KEY: ${{ secrets.NAN_API_KEY }}
       PR_AGENT_ANTHROPIC_API_KEY: ${{ secrets.PR_AGENT_ANTHROPIC_API_KEY }}
