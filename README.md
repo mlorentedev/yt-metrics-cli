@@ -112,7 +112,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 ## Documentation
 
 Project-bound knowledge lives in [`docs/`](docs/) (docs-as-code) — currently
-[`docs/lessons/`](docs/lessons/_index.md), one file per lesson. The build/operate docs live in the
+[`docs/lessons/`](docs/lessons/), one file per lesson. The build/operate docs live in the
 repo; the published site is `site/`.
 
 Working on this repo with an AI agent? Start at [`AGENTS.md`](AGENTS.md) — architecture, invariants,
