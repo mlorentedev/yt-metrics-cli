@@ -49,7 +49,8 @@
       "login": "github-actions",
       "declined_markers": [],
       "review_markers": [
-        "## PR Reviewer Guide"
+        "## PR Reviewer Guide",
+        "## Incremental PR Reviewer Guide"
       ],
       "why": "PR-Agent (see .github/workflows/pr-agent.yml) runs under GITHUB_TOKEN and publishes through the COMMENTS api, so its reviews never enter reviews[] and a classifier that looked only at reviews would read every PR-Agent-reviewed PR as unattested. The marker is the `review` command's own heading. `## PR Code Suggestions` is deliberately NOT here: suggestions are not a review, which is also why auto_improve is off on the automatic path. MARKER PROVENANCE: verified in the sibling ports before being declared here (kubelab has 215 PR comments carrying '## PR Reviewer Guide' posted by github-actions[bot], dotfiles 172). It has NEVER been observed in yt-metrics-cli, because the workflow landed in the same change as this file and NAN_API_KEY is not set in this repository yet: until the owner runs `dotf secrets sync ci --repo mlorentedev/yt-metrics-cli` and a PR-Agent run goes green, this entry is a declaration of intent, not of an actor."
     }
