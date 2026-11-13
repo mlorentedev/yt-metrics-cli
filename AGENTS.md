@@ -79,9 +79,8 @@ coverage (720 statements); treat the CI run as authoritative over any number wri
 | `src/transcript.py` | Transcript downloader with fallback chain + id validation |
 | `src/exporters/` | Report generators (csv, text, readme, url) |
 | `tests/` | pytest suite (one module per source module) |
-| `scripts/check-lessons.sh` | Lesson numbering + index guard (run by `repo-hygiene.yml`, not by pre-commit) |
 | `scripts/check-actions-pinned.sh` | Every `uses:` pinned to a commit SHA (run by `repo-hygiene.yml`, not by pre-commit) |
-| `docs/lessons/` | One file per lesson + `docs/lessons/_index.md`; `docs/lessons.md` is a pointer stub |
+| `docs/lessons/` | One file per lesson; `docs/lessons.md` is a pointer stub. `repo-hygiene.yml` checks them with `dotf lessons fmt --check` |
 | `specs/` | Per-feature SDD folders, created on demand by `dotf spec init` |
 | `site/` | Astro Starlight docs site (published to GitHub Pages) |
 | `.github/workflows/ci.yml` | lint, mypy, pytest+cov, `uv build` on 3.12 and 3.13 |
@@ -92,7 +91,7 @@ coverage (720 statements); treat the CI run as authoritative over any number wri
 ## Knowledge placement
 
 - Build/operate knowledge belongs **here**, in the repo: gotchas as `docs/lessons/lesson-NNN-*.md`
-  (indexed in `docs/lessons/_index.md`, guarded by `scripts/check-lessons.sh` in CI), decisions in
+  (checked in CI by `dotf lessons fmt --check`; `dotf lessons index` renders an index), decisions in
   `docs/adr/`, feature specs in `specs/<feature-id>/`. The vault holds no task state for this repo.
 - Cross-project insight goes to the maintainer's store; session memory never lives in this repo
   (GUARD-001).
