@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.9](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.8...v0.2.9) (2026-11-13)
+
+
+### Documentation
+
+* **agents:** describe the lessons check that replaced the script ([#122](https://github.com/mlorentedev/yt-metrics-cli/issues/122)) ([72ffc17](https://github.com/mlorentedev/yt-metrics-cli/commit/72ffc17a4efbff11acef4e159d7be531ce64292f))
+
 ## [0.2.8](https://github.com/mlorentedev/yt-metrics-cli/compare/v0.2.7...v0.2.8) (2026-10-19)
 
 
