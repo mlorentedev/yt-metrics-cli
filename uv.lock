@@ -1000,7 +1000,7 @@ wheels = [
 
 [[package]]
 name = "yt-metrics-cli"
-version = "0.2.8"
+version = "0.2.9"
 source = { editable = "." }
 dependencies = [
     { name = "google-api-python-client" },
